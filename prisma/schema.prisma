@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -32,7 +31,7 @@ model PokemonDetails {
 
   sprites   Json
   types     Json
-  heigth    Float
+  height    Float
   weight    Float
   moves     Json
   order     Int
