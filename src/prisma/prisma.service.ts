@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {PrismaClient} from "@prisma/client";
+import * as process from "node:process";
 
 @Injectable()
 export class PrismaService extends PrismaClient {
@@ -7,7 +8,7 @@ export class PrismaService extends PrismaClient {
         super({
             datasources: {
                 db: {
-                    url: "postgresql://dev:password@localhost:5434/pokedex?schema=public"
+                    url: process.env.DATABASE_URL
                 }
             }
         });

@@ -1,4 +1,4 @@
-import {Controller, Get, Query} from "@nestjs/common";
+import {Controller, Get, ParseIntPipe, Query} from "@nestjs/common";
 import {SearchService} from "./search.service";
 
 @Controller("api/v1")
@@ -9,7 +9,7 @@ export class SearchController {
     @Get("search")
     searchPokemons(
         @Query('query') query: string,
-        @Query('limit')limit: number) {
+        @Query('limit', new ParseIntPipe( { optional: true })) limit: number) {
 
         return this.searchService.searchPokemons(query, limit)
 
