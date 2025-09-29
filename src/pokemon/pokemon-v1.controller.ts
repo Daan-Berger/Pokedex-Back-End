@@ -1,4 +1,4 @@
-import {Controller, Get, Param} from "@nestjs/common";
+import {Controller, Get, Param, Query} from "@nestjs/common";
 import {PokemonService} from "./pokemon.service";
 
 @Controller("api/v1")
@@ -7,11 +7,12 @@ export class PokemonV1Controller {
     }
 
     @Get("pokemons")
-    getAllPokemons() {
+    getAllPokemons(@Query('sort') sort?: string) {
+        return this.pokemonService.getAllPokemons(sort);
     }
 
     @Get("pokemons/:id")
     getPokemonById(@Param('id') id: number) {
-
+        return this.pokemonService.getPokemonsWithId(id);
     }
 }
