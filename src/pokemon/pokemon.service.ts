@@ -3,6 +3,7 @@ import {PrismaService} from "../prisma/prisma.service";
 import {PokemonDto} from "./dto/pokemon.dto";
 import {PokemonDetailsDto} from "./dto/pokemonDetails.dto";
 import {PaginatedPokemonDto} from "./dto/pokemonPaginated.dto";
+import {PokemonSortOption} from "./enums/pokemon-sort-option.enum";
 
 @Injectable()
 export class PokemonService {
@@ -79,13 +80,13 @@ export class PokemonService {
 
     private getSortOrder(sort?: string) {
         switch (sort) {
-            case 'name-asc':
+            case PokemonSortOption.NAME_ASC:
                 return { name: 'asc' as const };
-            case 'name-desc':
+            case PokemonSortOption.NAME_DESC:
                 return { name: 'desc' as const };
-            case 'id-asc':
+            case PokemonSortOption.ID_ASC:
                 return { id: 'asc' as const };
-            case 'id-desc':
+            case PokemonSortOption.ID_DESC:
                 return { id: 'desc' as const };
             default:
                 return { id: 'asc' as const };
