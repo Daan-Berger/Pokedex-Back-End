@@ -1,6 +1,7 @@
 import {Body, Controller, Get, Param, ParseIntPipe, Post} from "@nestjs/common";
 import {TeamService} from "./teams.service";
 import {CreateTeamDto} from "./dto/createTeam.dto";
+import {SetPokemonIdForTeamDto} from "./dto/setPokemonIdForTeam.dto";
 
 @Controller("api/v1")
 export class TeamsController {
@@ -23,8 +24,9 @@ export class TeamsController {
     }
 
     @Post("teams/:id")
-    setPokemonsForTeam(@Param('id') id: number) {
-
+    setPokemonsForTeam(@Param('id', ParseIntPipe) id: number,
+                       @Body() setPokemonIdForTeam: SetPokemonIdForTeamDto) {
+        return this.teamService.setPokemonsForTeam(id, setPokemonIdForTeam);
     }
 
 }
