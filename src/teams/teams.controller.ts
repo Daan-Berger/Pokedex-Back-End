@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post} from "@nestjs/common";
+import {Body, Controller, Get, Param, ParseIntPipe, Post} from "@nestjs/common";
 import {TeamService} from "./teams.service";
 import {CreateTeamDto} from "./dto/createTeam.dto";
 
@@ -18,8 +18,8 @@ export class TeamsController {
     }
 
     @Get("teams/:id")
-    getTeamById(@Param('id') id: number) {
-
+    getTeamById(@Param('id', ParseIntPipe) id: number) {
+        return this.teamService.getTeamById(id);
     }
 
     @Post("teams/:id")

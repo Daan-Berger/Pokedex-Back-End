@@ -1,4 +1,4 @@
-import {Injectable} from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "../prisma/prisma.service";
 import {CreateTeamDto} from "./dto/createTeam.dto";
 import {TeamResponseDto} from "./dto/teamResponse.dto";
@@ -40,8 +40,30 @@ export class TeamService {
         };
     }
 
-   async getTeamById(id: number) {
+   async getTeamById(id: number): Promise<TeamResponseDto> {
+        const team = await this.prisma.team.findUnique({
+            where: {
+                id: id
+            },
+            include: {
+                pokemons: {
+                    select: {
+                        pokemonId: true
+                    }
+                }
+            }
 
+        });
+
+        if (!team) {
+            throw new NotFoundException(`Team with id ${id} not found`);
+        }
+
+       return {
+            id: team.id,
+           name: team.name,
+           pokemons: team.pokemons.map(tp => tp.pokemonId)
+       }
     }
 
     async setPokemonsForTeam(id: number) {
