@@ -5,7 +5,10 @@ export class PokemonDto {
         front_default: string;
     };
     types: {
-        type: string;
+        type: {
+            name: string;
+        };
         slot: number;
     }[];
 }
+
