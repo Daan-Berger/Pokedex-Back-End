@@ -1,7 +1,8 @@
-import {Injectable} from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "../prisma/prisma.service";
 import {PokemonDto} from "./dto/pokemon.dto";
 import {PokemonDetailsDto} from "./dto/pokemonDetails.dto";
+import {PaginatedPokemonDto} from "./dto/pokemonPaginated.dto";
 
 @Injectable()
 export class PokemonService {
@@ -30,12 +31,19 @@ export class PokemonService {
             }
         });
 
+        if (!pokemon) {
+            throw new NotFoundException(`Pokemon with id ${id} not found`);
+        }
+
         return pokemon as PokemonDetailsDto;
 
     }
 
-    async getAllPokemonsPaginated(sort?: string, limit?: number, offset?: number): Promise<PokemonDto[]> {
+    async getAllPokemonsPaginated(sort?: string, limit?: number, offset?: number): Promise<PaginatedPokemonDto> {
         const orderBy = this.getSortOrder(sort);
+
+        const take = limit || 20;
+        const skip = offset || 0;
 
         const pokemons = await this.prisma.pokemon.findMany({
             select: {
@@ -44,12 +52,29 @@ export class PokemonService {
                 sprites: true,
                 types: true
             },
-            take: limit,
-            skip: offset,
+            take: take,
+            skip: skip,
             orderBy: orderBy
         });
 
-        return pokemons as PokemonDto[];
+        const total = await this.prisma.pokemon.count();
+
+        const pages = Math.ceil(total / take);
+        const page = Math.floor(skip / take) + 1;
+
+        const baseUrl = 'http://localhost:3000/api/v2/pokemons';
+        const nextOffset = skip + take;
+        const previousOffset = skip - take;
+
+        const next = nextOffset < total ? `${baseUrl}?${sort ? `sort=${sort}` : ''}&limit=${take}&offset=${nextOffset}` : null;
+
+        const previous = skip > 0 ? `${baseUrl}?${sort ? `sort=${sort}` : ''}&limit=${take}&offset=${previousOffset}` : null;
+
+
+        return {
+            data: pokemons as PokemonDto[],
+            metadata: {next, previous, total, pages, page}
+        };
     }
 
     private getSortOrder(sort?: string) {
