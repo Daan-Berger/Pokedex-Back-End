@@ -20,7 +20,7 @@ export class SearchService {
                     },
                     {
                         types: {
-                            array_contains: [{ type: { name: query }}],
+                            array_contains: [{ type: { name: query.toLowerCase() }}],
                             mode: 'insensitive'
                         }
                     }
