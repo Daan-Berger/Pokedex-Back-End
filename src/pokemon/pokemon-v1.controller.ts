@@ -1,4 +1,4 @@
-import {Controller, Get, Param, Query} from "@nestjs/common";
+import {Controller, Get, Param, ParseIntPipe, Query} from "@nestjs/common";
 import {PokemonService} from "./pokemon.service";
 
 @Controller("api/v1")
@@ -12,7 +12,7 @@ export class PokemonV1Controller {
     }
 
     @Get("pokemons/:id")
-    getPokemonById(@Param('id') id: number) {
+    getPokemonById(@Param('id', ParseIntPipe) id: number) {
         return this.pokemonService.getPokemonsWithId(id);
     }
 }

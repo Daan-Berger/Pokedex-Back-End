@@ -17,7 +17,7 @@ export class PokemonService {
                 sprites: true,
                 types: true
             },
-            orderBy
+            orderBy: orderBy
         });
 
         return pokemons as PokemonDto[];
@@ -46,7 +46,7 @@ export class PokemonService {
             },
             take: limit,
             skip: offset,
-            orderBy
+            orderBy: orderBy
         });
 
         return pokemons as PokemonDto[];
