@@ -9,7 +9,7 @@ export class TeamsController {
 
     @Get("teams")
     getAllTeams() {
-
+        return this.teamService.getAllTeams();
     }
 
     @Post("teams")

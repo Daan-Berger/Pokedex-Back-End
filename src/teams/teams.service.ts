@@ -8,8 +8,22 @@ export class TeamService {
     constructor(private prisma: PrismaService) {
     }
 
-    async getAllTeams() {
+    async getAllTeams(): Promise<TeamResponseDto[]> {
+        const teams = await this.prisma.team.findMany({
+            include: {
+                pokemons: {
+                    select: {
+                        pokemonId: true
+                    }
+                }
+            }
+        });
 
+        return teams.map(team => ({
+            id: team.id,
+            name: team.name,
+            pokemons: team.pokemons.map(tp => tp.pokemonId)
+        }));
     }
 
     async createTeam(createTeamDto: CreateTeamDto): Promise<TeamResponseDto> {
